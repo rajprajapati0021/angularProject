@@ -1,0 +1,51 @@
+<mat-card class="profile-card">
+    <mat-card-header>
+      <div mat-card-avatar class="profile-avatar"></div>
+      <mat-card-title>Overview</mat-card-title>
+      <mat-card-subtitle>Personal Information</mat-card-subtitle>
+      <button mat-icon-button (click)="toggleEditMode()">
+        <mat-icon style="color: black;" >edit</mat-icon>
+      </button>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="profile-details">
+          <div class="detail">
+            <mat-label>First Name</mat-label>
+            <mat-form-field appearance="fill">
+              <input matInput formControlName="firstName" />
+              <mat-error *ngIf="profileForm.get('firstName')?.hasError('minlength')">444444444444444</mat-error>
+              <mat-error *ngIf="profileForm.get('firstName')?.hasError('required')">This field is required</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="detail">
+            <mat-label>Last Name</mat-label>
+            <mat-form-field appearance="fill">
+              <input matInput formControlName="lastName" />
+            </mat-form-field>
+          </div>
+          <div class="detail">
+            <mat-label>Age</mat-label>
+            <mat-form-field appearance="fill">
+              <input matInput formControlName="age" />
+            </mat-form-field>
+          </div>
+          <div class="detail">
+            <mat-label>Phone</mat-label>
+            <mat-form-field appearance="fill">
+              <input matInput formControlName="phoneNumber" />
+            </mat-form-field>
+          </div>
+          <div class="detail">
+            <mat-label>Email</mat-label>
+            <mat-form-field appearance="fill">
+              <input matInput formControlName="email" />
+            </mat-form-field>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!profileForm.valid || !profileForm.dirty">Submit</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+      

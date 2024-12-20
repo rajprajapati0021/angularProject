@@ -1,0 +1,54 @@
+<div class="navbody" style="width: 100%;">
+  <header>
+    <h1 class="logo">Art-Gallery</h1>
+    <input type="checkbox" class="nav-toggle" id="nav-toggle">
+    <nav>
+      <ul>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item [routerLink]="['profile']">
+            <mat-icon>person</mat-icon>
+            Profile
+          </button>
+          <button mat-menu-item [routerLink]="['/cart']">
+            <mat-icon>shopping_cart</mat-icon>
+            Cart
+          </button>
+          <button mat-menu-item >
+            <mat-icon>card_giftcard</mat-icon>
+            Orders
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
+        </mat-menu>
+        <li *ngIf="isAuthenticated && userClaims.role =='admin'">
+          <a routerLink="/what-we-do">What We Do</a>
+        </li>
+        <li>
+          <a routerLink="/home">Home</a>
+        </li>
+        <li>
+          <a routerLink="/artistic-products">Artistic Products</a>
+        </li>
+        <li>
+          <a routerLink="/your-product">Your Product</a>
+        </li>
+        <li>
+          <a
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-hidden="false"
+            aria-label="Example home icon"
+          >
+            <mat-icon fontIcon="account_circle"></mat-icon>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    
+    <label for="nav-toggle" class="nav-toggle-label">
+      <span></span>
+    </label>
+  </header>
+</div>

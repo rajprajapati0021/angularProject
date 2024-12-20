@@ -1,0 +1,125 @@
+.profile-card {
+    width: 70% !important;
+    margin: auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .profile-avatar {
+    background-image: url('https://placekitten.com/100/100');
+    background-size: cover;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .profile-details {
+    display: grid;
+    grid-template-columns: 1fr ;
+    gap: 20px;
+  }
+  
+  .detail {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  button[mat-icon-button] {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  
+  mat-card-header {
+    background-color: #3f51b5;
+    color: white;
+    padding: 15px;
+  }
+  
+  mat-card-title {
+    font-size: 1.5em;
+  }
+  
+  mat-card-subtitle {
+    font-size: 1.2em;
+  }
+  
+  mat-label {
+    font-weight: bold;
+  }
+  
+  mat-icon {
+    font-size: 20px;
+  }
+
+  .profile-card {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.767);
+    border-radius: 8px;
+  }
+  
+  .profile-avatar {
+    background-image: url('https://placekitten.com/100/100');
+    background-size: cover;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .profile-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .detail {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  button[mat-icon-button] {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  
+  mat-card-header {
+    background-color: rgba(139, 152, 177, 0.473);
+    color: white;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  
+  mat-card-title {
+    font-size: 1.5em;
+  }
+  
+  mat-card-subtitle {
+    font-size: 1.2em;
+  }
+  
+  mat-label {
+    font-weight: bold;
+    color: white;
+  }
+  
+  mat-icon {
+    font-size: 20px;
+  }
+  
+  mat-card{
+    background-color: white !important;
+  }
+
+  

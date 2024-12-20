@@ -1,0 +1,225 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+img {
+  display: block;
+  width: 100%;
+  max-width: 800px;
+}
+
+#main-img{
+  display: block;
+  width: 100%;
+  max-width: 2000px;
+}
+
+.body {
+  color: white;
+
+}
+
+.body::-webkit-scrollbar {
+  display: none; 
+} 
+section {
+  margin: 5rem 2rem;
+}
+
+
+p{
+  line-height: 25px !important;
+}
+h3{
+  line-height: 40px !important;
+}
+
+/* Section One */
+
+.section-one {
+  margin: 11rem 2rem 0;
+}
+
+.header {
+  font-size: 4.5rem;
+}
+
+.section-one-paragraph {
+  margin: 1rem 0 3rem;
+  width: 70%;
+  max-width: 500px;
+  line-height: 1.5rem;
+  font-size: larger;
+}
+
+
+.learn-more-btn {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 50px;
+  font-size: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+}
+
+.learn-more-btn:hover {
+  background: #6c83ff;
+  color: white;
+}
+
+/* Section Two */
+
+/* Section Three */
+
+.section-three h3 {
+  margin: 0 auto;
+  width: 80%;
+  max-width: 700px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Section Four */
+
+.flex-group {
+  display: flex;
+  justify-content:center ;
+  align-items: center;
+  gap: 3rem;
+}
+
+.section-four p {
+  margin-bottom: 2rem;
+  font-size: 1.4rem;
+}
+
+.section-four-btn {
+  margin-bottom: rem;
+}
+
+/* Section Five */
+
+.section-five-flex-group {
+  flex-direction: row-reverse;
+}
+
+.section-five p {
+  margin-bottom: 2rem;
+  font-size: 1.4rem;
+}
+
+/* Section Six */
+
+.section-six p {
+  margin-bottom: 2rem;
+  font-size: 1.4rem;
+}
+
+/* Flex Group Mobile */
+
+@media (max-width: 800px) {
+  .flex-group {
+    flex-direction: column;
+  }
+}
+
+/* Section Seven */
+
+.section-seven h3 {
+  margin: 0 auto;
+  width: 80%;
+  max-width: 700px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.section-seven-btn {
+  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+  width: 7.5rem;
+}
+
+/* Section Eight */
+
+.section-eight h4 {
+  margin: 1rem 0;
+  font-size: 1.25rem;
+}
+
+.section-eight p {
+  line-height: 1.5rem;
+  font-size: 1.4rem;
+}
+
+
+
+.flex-group-eight {
+  display: flex;
+  gap: 2rem;
+}
+
+@media (max-width: 800px) {
+  .flex-group-eight {
+    flex-direction: column;
+  }
+}
+
+/* Section Nine */
+
+.section-nine {
+  margin-top: 15rem;
+}
+
+.logo-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-evenly;
+  width: 70%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.section-nine svg {
+  fill: white;
+  height: 50px;
+  cursor: pointer;
+  transition: ease-in-out 250ms;
+}
+
+.section-nine svg:hover {
+  transform: translateY(-10px);
+  fill: #ffa98e;
+}
+
+
+/* Section Ten */
+
+.section-ten h3 {
+  margin: 15rem auto 2rem;
+  width: 80%;
+  max-width: 700px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.section-ten-btn {
+  text-align: center;
+  display: flex;  
+  justify-content: center;
+  margin: 0 auto;
+  width: 7.5rem;
+}
+
+
+
+
+
+

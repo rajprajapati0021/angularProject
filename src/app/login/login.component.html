@@ -1,0 +1,74 @@
+<div class="body">
+    <div class="container" id="container" #container>
+        <div class="form-container sign-up-container">
+            <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
+                <h1>Create Account</h1>
+                <div class="social-container">
+                    <a href="#" class="social">
+                        <i name="logo-facebook"></i>
+                    </a>
+                    <a href="#" class="social">
+                        <i name="logo-googleplus"></i>
+                    </a>
+                    <a href="#" class="social">
+                        <i name="logo-linkedin"></i>
+                    </a>
+                </div>
+                <span>or use your email for registration</span>
+                <input type="text" formControlName="firstName"  placeholder="first Name">
+                <span *ngIf="signUpForm.get('firstName')?.hasError('required') && signUpForm.get('firstName')?.touched"> first name is required</span>
+                <input type="text" formControlName="lastName"  placeholder="last Name">
+                <span *ngIf="signUpForm.get('lastName')?.hasError('required') && signUpForm.get('lastName')?.touched"> last name is required</span>
+                <input type="text" formControlName="age"  placeholder="age">
+                <span *ngIf="signUpForm.get('age')?.hasError('required') && signUpForm.get('age')?.touched"> age is required</span>
+                <input type="text" formControlName="phoneNumber"  placeholder="phone number">
+                <span *ngIf="signUpForm.get('phoneNumber')?.hasError('required') && signUpForm.get('phoneNumber')?.touched"> phone number is required</span>
+                <input type="email" formControlName="email" placeholder="Email">
+                <span *ngIf="signUpForm.get('email')?.errors?.['required'] && signUpForm.get('email')?.touched"> email is required</span>
+                <span *ngIf="signUpForm.get('email')?.hasError('pattern') && signUpForm.get('email')?.touched"> email is not correct</span>
+                <input type="password" formControlName="password" placeholder="Password">
+                <span *ngIf="signUpForm.get('password')?.errors?.['required'] && signUpForm.get('password')?.touched"> password is required </span>
+
+                <button >Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form action="#" [formGroup]="signInForm">
+                <h1>Sign In</h1>
+                <div class="social-container">
+                    <a href="#" class="social">
+                        <i name="logo-facebook"></i>
+                    </a>
+                    <a href="#" class="social">
+                        <i name="logo-googleplus"></i>
+                    </a>
+                    <a href="#" class="social">
+                        <i name="logo-linkedin"></i>
+                    </a>
+                </div>
+                <span>or use your account</span>
+                <input type="email" formControlName="email"  placeholder="Email">
+                <span *ngIf="signInForm.get('email')?.errors?.['required'] && signInForm.get('email')?.touched"> email is required</span>
+                <span *ngIf="signInForm.get('email')?.hasError('pattern') && signInForm.get('email')?.touched"> email is not correct</span>
+                <input type="password" formControlName="password" placeholder="Password">
+                <span *ngIf="signInForm.get('password')?.errors?.['required'] && signInForm.get('password')?.touched"> password is required</span>
+                <button (click)="signIn()">Sign In</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn" (click)="signInClick()">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello,Friend</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button class="ghost" #signUpBtn (click)="signUpClick()" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
