@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { SignUpFormData } from './sign-up-form-data';
-import { SignInFormData } from './sign-in-form-data';
+import { SignUpFormData } from '../login/sign-up-form-data';
+import { SignInFormData } from '../login/sign-in-form-data';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 

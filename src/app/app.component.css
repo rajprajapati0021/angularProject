@@ -13,3 +13,8 @@
     display: none; 
   } 
 
+
+  /* In your styles.css or component-specific styles */
+ ::ng-deep simple-snack-bar {
+    background-color: rgb(66, 33, 211);
+ }

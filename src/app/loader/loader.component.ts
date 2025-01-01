@@ -1,6 +1,6 @@
 import { CommonModule, NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { LoaderService } from '../guards/loader.service';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'app-loader',

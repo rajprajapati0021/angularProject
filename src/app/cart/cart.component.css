@@ -30,14 +30,3 @@
     overflow: hidden;            /* Hides overflowing text */
     text-overflow: ellipsis;     /* Adds ellipsis (...) for overflow */
   }
-  
-  svg{
-    width: 100px;
-    height: 100px;
-    margin: 20px;
-    display:inline-block;
-  }
-
-  ::ng-deep .mat-mdc-fab-base>svg {
-    width: 59px !important;
-}

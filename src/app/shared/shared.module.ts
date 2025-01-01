@@ -14,7 +14,7 @@ import { RouterModule } from '@angular/router';
   declarations: [
     // Declare shared components, directives, and pipes here (if any)
   ],
-  imports: [NgFor,NgIf],
+  imports: [],
   exports: [
     CommonModule,
     FormsModule,
@@ -24,8 +24,6 @@ import { RouterModule } from '@angular/router';
     MatInputModule,
     MatMenuModule,
     MatToolbarModule,
-    NgFor,
-    NgIf,
     RouterModule,
     MatCardModule
   ]

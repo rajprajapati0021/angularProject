@@ -1,0 +1,12 @@
+<h2 style="color: white;">Cart Items</h2>
+<div id="main">
+  <div [ngStyle]="{'display' : 'flex'}" *ngIf="cartItems.length == 0">
+    <img src="https://cdn-icons-png.flaticon.com/512/11010/11010851.png" style="margin: auto; margin-top: 10vh;" width="400" height="400" alt="Empty cart free icon" title="Empty cart free icon">
+  </div>
+  <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="space-evenly" fxLayoutGap="10px"
+    main-axisfxLayoutAlign="space-around">
+    <div *ngFor="let cartItem of cartItems" fxFlex="20" fxFlex.xs="90" class="box">
+      <app-product-card [cartItem]="cartItem" [cardType]="cardType" (deleteCartItem)="deleteCartItem($event)"></app-product-card>
+    </div>
+  </div>
+</div>

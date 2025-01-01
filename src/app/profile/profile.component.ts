@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../guards/auth.service';
-import { LoginService } from '../login/login.service';
+import { AuthService } from '../services/auth.service';
+import { LoginService } from '../services/login.service';
 import { SignUpFormData } from '../login/sign-up-form-data';
 import { SharedModule } from '../shared/shared.module';
 

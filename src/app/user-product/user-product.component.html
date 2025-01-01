@@ -1,42 +1,36 @@
 <div class="main-container">
-<h1 style="color: white;">User Product Page</h1>
+  <h1 style="color: white;">User Product Page</h1>
 
-    <form class="product-form" [formGroup]="addProductForm" (ngSubmit)="addProduct()">
-        <mat-form-field>
-            <mat-label>Product Name</mat-label>
-            <input  formControlName="name" matInput>
-            <mat-error>this field is required</mat-error>
-        </mat-form-field>
-        <mat-form-field fxFlex="30%">
-            <mat-label>Product description</mat-label>
-            <textarea matInput formControlName="description"
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"></textarea>
-            <mat-error>this field is required</mat-error>
-            <!-- <textarea matInput [matTextareaAutosize]="false"></textarea> -->
-        </mat-form-field>
-        <mat-form-field floatLabel="always" >
-            <mat-label>Amount</mat-label>
-            <input matInput type="number" placeholder="0.00" formControlName="price" class="example-right-align"/>
-            <span matTextPrefix style="color: black;">$&nbsp;</span>
-            <mat-error>this field is required</mat-error>
-        </mat-form-field> 
+  <form class="product-form" [formGroup]="addProductForm" (ngSubmit)="addProduct()">
+    <mat-form-field>
+      <mat-label>Product Name</mat-label>
+      <input formControlName="name" matInput>
+      <mat-error>this field is required</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="30%">
+      <mat-label>Product description</mat-label>
+      <textarea matInput formControlName="description" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+      <mat-error>this field is required</mat-error>
+      <!-- <textarea matInput [matTextareaAutosize]="false"></textarea> -->
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <mat-label>Amount</mat-label>
+      <input matInput type="number" placeholder="0.00" formControlName="price" class="example-right-align" />
+      <span matTextPrefix style="color: black;">$&nbsp;</span>
+      <mat-error>this field is required</mat-error>
+    </mat-form-field>
 
-        <mat-form-field floatLabel="always" >
-            <mat-label>Stock</mat-label>
-            <input matInput type="number" placeholder="0" formControlName="stock" class="example-right-align"/>
-            <mat-error>this field is required</mat-error>
-        </mat-form-field>   
+    <mat-form-field floatLabel="always">
+      <mat-label>Stock</mat-label>
+      <input matInput type="number" placeholder="0" formControlName="stock" class="example-right-align" />
+      <mat-error>this field is required</mat-error>
+    </mat-form-field>
 
-        <div class="fileUplodeField" style="color: black; display: flex; ">
-            <!-- <input matInput readonly  #fileInputBox class="innerInput"> -->
-            <input (change)="selectFile($event)" #fileInput type="file" style="display:none;" id="file">
-            <img 
-            [src]="selectedFile || ''" 
-            alt="" 
-            style="
+    <div class="fileUplodeField" style="color: black; display: flex; ">
+      <!-- <input matInput readonly  #fileInputBox class="innerInput"> -->
+      <input (change)="selectFile($event)" #fileInput type="file" style="display:none;" id="file">
+      <img [src]="selectedFile || ''" alt="" style="
               width: 80px; 
               height: 80px; 
               border-radius: 50%; 
@@ -45,53 +39,25 @@
               background-size: cover; 
               background-position: center; 
               background-repeat: no-repeat;
-              margin-bottom: 30px;" 
-            (click)="triggerFileInput()">
-          
+              margin-bottom: 30px;" (click)="triggerFileInput()">
+
+    </div>
+
+    <button mat-fab extended id="custom" type="submit" color="primary">
+      <mat-icon>add</mat-icon>
+      <span #addProductBtnTxt>Add Product</span>
+    </button>
+  </form>
+
+  <div class="product-list">
+    <h2>Products</h2>
+    <!-- Product items will be displayed here -->
+    <div class="container">
+      <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="space-evenly" fxLayoutGap="10px"
+        main-axisfxLayoutAlign="space-around">
+        <div *ngFor="let product of products" fxFlex="20" fxFlex.xs="90" class="box">
+          <app-product-card [product]="product" (deleteProductEvent)="deleteProduct($event)" (editProductEvent)="editProduct($event)" [cardType]="cardType"></app-product-card>
         </div>
-
-        <button mat-fab extended id="custom" type="submit" color="primary" >
-            <mat-icon>add</mat-icon>
-            <span #addProductBtnTxt>Add Product</span>
-        </button>
-    </form>
-    
-    <div class="product-list">
-        <h2>Products</h2>
-        <!-- Product items will be displayed here -->
-        <div class="container">
-            <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="space-evenly" fxLayoutGap="10px"  main-axisfxLayoutAlign="space-around">
-              <div *ngFor="let product of products" fxFlex="20" fxFlex.xs="90" class="box">
-                <mat-card class="example-card" appearance="outlined">
-                    <mat-card-header>
-                      <div mat-card-avatar class="example-header-image"></div>
-                      <mat-card-title>{{product.user.firstName}} {{product.user.lastName}}</mat-card-title>
-                      <mat-card-subtitle>Artist</mat-card-subtitle>
-                    </mat-card-header>
-                    <img style="width: 100%; height: 300px;" mat-card-image [src]="product.imageUrl" alt="Photo of a Shiba Inu">
-                    <mat-card-content>
-                        <mat-card-title>{{product.name}}Artistic </mat-card-title>
-                        <mat-card-title><span style='font-size:20px;'>&#8377;</span>{{product.price}} only</mat-card-title>
-                      <p class="description">
-                        {{product.description}}
-                      </p>
-                    </mat-card-content>
-                    <mat-card-actions  [ngStyle]="isSmallScreen ? {'flex-direction': 'column', 'gap': '5px'} : {'gap': '10px'}" 
-                    style="display: flex; justify-content: space-around; align-items: center;">
-                        <button mat-fab extended id="custom" type="button" color="primary" (click)="deleteProduct(product.id)"  >
-                            <mat-icon>delete</mat-icon>
-                            Delete
-                        </button>
-
-                        <button mat-fab extended id="custom" type="button" color="primary" (click)="editProduct(product)"  >
-                            <mat-icon>edit</mat-icon>
-                            Edit
-                        </button>
-                    </mat-card-actions>
-                  </mat-card>
-                  
-              </div>
-            </div>
-          </div>
-    </div> 
-
+      </div>
+    </div>
+  </div>

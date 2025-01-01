@@ -1,6 +1,7 @@
 
 export interface Like{
-    datetime : Date
-    productId : bigint
+    datetime : Date | null
+    productId : bigint,
+    likedByUser : bigint | null
 }
 

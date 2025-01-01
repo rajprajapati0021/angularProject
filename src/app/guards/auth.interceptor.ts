@@ -1,16 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { catchError, finalize, map, Observable, throwError } from 'rxjs';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { LoaderService } from './loader.service';
+import { LoaderService } from '../services/loader.service';
+import { ToastrService } from '../services/toastr.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthInterceptor implements HttpInterceptor {
   authService = inject(AuthService);
-  loaderService = inject(LoaderService)
+  loaderService = inject(LoaderService);
+  toastrService = inject(ToastrService)
   router = inject(Router);
   private requests : HttpRequest<any>[] = [];
   private isLoadingRequired : Boolean = false;
@@ -71,6 +73,7 @@ export class AuthInterceptor implements HttpInterceptor {
       })
     );
   }
+  
 
   private handleSuccess(response: HttpResponse<any>) {
     switch (response.status) {
@@ -79,9 +82,11 @@ export class AuthInterceptor implements HttpInterceptor {
         break;
       case 201:
         console.log('Record created successfully.');
+        this.toastrService.openSnackBar('Record created successfully!')
         break;
       case 204:
         console.log('Record updated successfully.');
+        this.toastrService.openSnackBar('Record updated successfully!')
         break;
       default:
         console.log(`Response status: ${response.status}`);
@@ -93,22 +98,27 @@ export class AuthInterceptor implements HttpInterceptor {
     switch (error.status) {
       case 400:
         console.error('Bad request.');
+        this.toastrService.openSnackBar('Bad request!')
         break;
       case 401:
         console.error('Unauthorized request. Redirecting to login.');
+        this.toastrService.openSnackBar('Unauthorized request. Redirecting to login.')
         this.router.navigate(['/login']);
         break;
       case 403:
         console.error('Forbidden.');
+        this.toastrService.openSnackBar('Forbidden!')
         break;
       case 404:
         console.error('Resource not found.');
         break;
       case 500:
         console.error('Internal server error.');
+        this.toastrService.openSnackBar('Internal server error.')
         break;
       default:
         console.error(`Error occurred with status: ${error.status}`);
+        this.toastrService.openSnackBar(`Error occurred with status: ${error.status}`)
         break;
     }
   }

@@ -1,18 +1,18 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChild, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SharedModule } from '../shared/shared.module';
-import { ProductService } from './product.service';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { Product } from '../models/product';
-import { FlexLayoutServerModule } from '@angular/flex-layout/server';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { markAsUntransferable } from 'worker_threads';
-import { Like } from '../models/like';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutServerModule } from '@angular/flex-layout/server';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { Product } from '../models/product';
+import { ProductService } from '../services/product.service';
+import { SharedModule } from '../shared/shared.module';
+import { ProductCardComponent } from "../product-card/product-card.component";
+import { CardTypeEnum } from '../enums/card-type.enum';
 @Component({
   selector: 'app-user-product',
   standalone: true,
-  imports: [ReactiveFormsModule, SharedModule, FlexLayoutModule,FlexLayoutServerModule,MatExpansionModule],
+  imports: [ReactiveFormsModule, SharedModule, FlexLayoutModule, FlexLayoutServerModule, MatExpansionModule, ProductCardComponent],
   templateUrl: './user-product.component.html',
   styleUrl: './user-product.component.css',
 })
@@ -20,10 +20,10 @@ export class UserProductComponent implements OnInit {
   selectedFile: string | ArrayBuffer | null | undefined = null;
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('addProductBtnTxt') addProductBtnTxt! : ElementRef;
-  
   isSmallScreen: boolean = false;
   addProductForm!: FormGroup;
-  products : Product[] = []
+  products : Product[] = [];
+  cardType : CardTypeEnum = CardTypeEnum.UserProductCard
 
   constructor(private breakpointObserver: BreakpointObserver,private productService: ProductService) {
     this.breakpointObserver.observe([Breakpoints.Tablet]).subscribe(result => {
@@ -116,15 +116,7 @@ export class UserProductComponent implements OnInit {
   }
 
   deleteProduct(productId : bigint){
-    this.productService.deleteProduct(productId).subscribe({
-      next: () => {
-        console.log("deleted sucessfully!")
         this.products = this.products.filter(product => product.id != productId)
-      },
-      error: (error) => {
-        console.log(error)
-      }
-    })
   }
 
   editProduct(product : Product){

@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { Like } from '../models/like';
 import { Product } from '../models/product';
 import { Comment } from '../models/comment';
-import { RequestOptions } from 'https';
+import { Cart } from '../models/cart';
 
 @Injectable({
   providedIn: 'root'
@@ -58,4 +58,15 @@ export class ProductService {
     return this.http.post<any>(`${this.baseUrl}/product/delete-comment`,null,{params:{'commentId':commentId}})
   }
   
+  addToCart(productId : bigint): Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/product/add-to-cart`,productId)
+  }
+
+  getCartItems() : Observable<Cart[]>{
+    return this.http.get<Cart[]>(`${this.baseUrl}/product/get-cart-items`,{headers : {"isLoadingRequired": 'true'}})
+  }
+
+  removeFromCart(cartItemId : bigint): Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/product/remove-from-cart`,cartItemId)
+  }
 }

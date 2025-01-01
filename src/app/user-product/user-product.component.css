@@ -32,37 +32,5 @@
 /* ::ng-deep  .mat-mdc-form-field-infix{
     padding: 0px;
 }  */
-:host ::ng-deep #custom{
-    margin-bottom: 10px;
-    
-}
 
-.example-card {
-    max-width: 400px;
-    min-height: 400px;
-  }
-  
-  .example-header-image {
-    background-image: url('https://avatar.iran.liara.run/public/42');
-    background-size: cover;
-  }
-  
 
-  mat-card-title {
-    white-space: nowrap;       /* Prevents wrapping */
-    overflow: hidden;          /* Hides overflowing text */
-    text-overflow: ellipsis;   /* Adds ellipsis at the end of the text */
-    display: block;            /* Required for ellipsis to work */
-  }
-  
-
-  .description {
-    display: -webkit-box;        /* Enables the use of -webkit-line-clamp */
-    line-clamp: 3; 
-    -webkit-line-clamp: 3;       /* Limits the text to 3 lines */
-    -webkit-box-orient: vertical; /* Sets the box orientation to vertical */
-    overflow: hidden;            /* Hides overflowing text */
-    text-overflow: ellipsis;     /* Adds ellipsis (...) for overflow */
-  }
-  
-  

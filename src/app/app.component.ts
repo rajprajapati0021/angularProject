@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavComponent } from './nav/nav.component';
-import { AuthService } from './guards/auth.service';
+import { AuthService } from './services/auth.service';
 import { LoaderComponent } from "./loader/loader.component";
 
 @Component({

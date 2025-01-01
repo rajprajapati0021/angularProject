@@ -4,7 +4,7 @@ import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild } from '@
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { LoginService } from './login.service';
+import { LoginService } from '../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
 
 
-  constructor(private logInSignUpService: LoginService, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(private logInSignUpService: LoginService, private router: Router) {
     this.signUpForm = new FormGroup({
       id : new FormControl(0),
       firstName: new FormControl('', Validators.required),

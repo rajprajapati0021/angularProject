@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
-import { AuthService } from '../guards/auth.service';
+import { AuthService } from '../services/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
