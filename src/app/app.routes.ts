@@ -8,6 +8,8 @@ import { ErrorComponent } from './error/error.component';
 import { ArtisticProductComponent } from './artistic-product/artistic-product.component';
 import { LoaderComponent } from './loader/loader.component';
 import { CartComponent } from './cart/cart.component';
+import { OrderComponent } from './order/order.component';
+import { ChatComponent } from './chat/chat.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -17,5 +19,7 @@ export const routes: Routes = [
   { path : 'artistic-products', component: ArtisticProductComponent, canActivate: [authGuard]},
   { path : 'profile', component: ProfileComponent, canActivate: [authGuard]},
   { path : 'cart', component: CartComponent, canActivate: [authGuard]},
+  { path : 'order', component: OrderComponent, canActivate: [authGuard]},
+  { path : 'chat', component: ChatComponent, canActivate: [authGuard]},
   { path: '**', component: ErrorComponent } 
 ];

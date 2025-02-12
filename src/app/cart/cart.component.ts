@@ -43,4 +43,25 @@ export class CartComponent implements OnInit {
     })
     console.log(this.cartItems,"sfsdf")
   }
+
+  
+  orderProducts(){
+
+    let productIds : bigint[]  = [];
+    this.cartItems.forEach(cartItem => {
+
+      productIds.push(cartItem.product.id);
+ 
+    });
+    this.productService.addOrder(productIds).subscribe({
+      next: () => {
+
+        this.toastr.openSnackBar('order placed!')
+        this.cartItems = [];
+      },
+      error: () => {
+        this.toastr.openSnackBar('Error occured order not placed!')
+      }
+    })
+  }
 }

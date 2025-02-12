@@ -1,17 +1,15 @@
-import { Component, EventEmitter, Input, NgModule, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
-import { SharedModule } from '../shared/shared.module';
-import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
-import { Product } from '../models/product';
 import { CommonModule } from '@angular/common';
-import { Like } from '../models/like';
-import { ProductService } from '../services/product.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetComponent } from '../bottom-sheet/bottom-sheet.component';
-import { AuthService } from '../services/auth.service';
 import { CardTypeEnum } from '../enums/card-type.enum';
-import { ToastrService } from '../services/toastr.service';
 import { Cart } from '../models/cart';
+import { Like } from '../models/like';
+import { Product } from '../models/product';
+import { AuthService } from '../services/auth.service';
+import { ProductService } from '../services/product.service';
+import { ToastrService } from '../services/toastr.service';
+import { SharedModule } from '../shared/shared.module';
 
 @Component({
   selector: 'app-product-card',
@@ -30,6 +28,7 @@ export class ProductCardComponent implements OnChanges{
   @Output() deleteCartItem = new EventEmitter<bigint>();
   @Output() deleteProductEvent = new EventEmitter<bigint>(); 
   @Output() editProductEvent = new  EventEmitter<Product>();
+  @Output() orderProductEvent = new EventEmitter<bigint>();
   @Input() product: Product | null = null;
   @Input() cartItem: Cart | null = null;
   @Input() cardType: CardTypeEnum = CardTypeEnum.ArtisticProductCard;
@@ -125,7 +124,7 @@ export class ProductCardComponent implements OnChanges{
       },
       error: (error) => {
         this.isAddLoaderShow = false;
-        this.toastrService.openSnackBar('Product not add in cart')
+        this.toastrService.openSnackBar('Product not added in cart')
       }
     })
   }
@@ -145,5 +144,6 @@ export class ProductCardComponent implements OnChanges{
       }
     })
   }
+
 
 }

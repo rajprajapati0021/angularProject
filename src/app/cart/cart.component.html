@@ -9,4 +9,10 @@
       <app-product-card [cartItem]="cartItem" [cardType]="cardType" (deleteCartItem)="deleteCartItem($event)"></app-product-card>
     </div>
   </div>
+
+  <div style="display: flex; justify-content: center;">
+    <button *ngIf="cartItems.length > 0" mat-fab extended (click)="orderProducts()">
+      Order
+    </button>
+  </div>
 </div>

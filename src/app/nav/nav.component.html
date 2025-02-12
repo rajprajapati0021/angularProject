@@ -13,7 +13,7 @@
             <mat-icon>shopping_cart</mat-icon>
             Cart
           </button>
-          <button mat-menu-item >
+          <button mat-menu-item [routerLink] ="['order']">
             <mat-icon>card_giftcard</mat-icon>
             Orders
           </button>
@@ -31,8 +31,11 @@
         <li>
           <a routerLink="/artistic-products">Artistic Products</a>
         </li>
-        <li>
+        <li *ngIf="isAuthenticated">
           <a routerLink="/your-product">Your Product</a>
+        </li>
+        <li *ngIf="isAuthenticated">
+          <a routerLink="/chat">Chat</a>
         </li>
         <li>
           <a

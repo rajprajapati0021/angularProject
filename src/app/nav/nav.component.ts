@@ -22,10 +22,15 @@ export class NavComponent {
   constructor() {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.userClaims = this.authService.userClaims;
-  }
+
+    this.authService.authStatus$.subscribe(status => {
+      this.isAuthenticated = status;
+    });
+  } 
 
   logout(){
     localStorage.clear();
     this.router.navigate(['login'])
+    this.isAuthenticated = false
   }
 }

@@ -1,0 +1,29 @@
+<div id="dialogBox">
+  <link href='https://fonts.googleapis.com/css?family=Hind:300|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+
+  <div class="card">
+    <div class="header">
+      <div class="animation" >
+        <span class="icon ring" #iconBox></span>
+        <div class="cercle one" ></div>
+        <div class="cercle two"></div>
+        <div class="cercle three"></div>
+      </div>
+  
+      <p class="phoneNumber">182 5843 6068</p>
+      <p class="calling">Calling</p>
+    </div>
+    <audio id="localAudio" #localAudio style="visibility: hidden;"></audio>
+    <audio id="remoteAudio" #remoteAudio style="visibility: hidden;"></audio>
+  
+    <div class="footer">
+      <div class="bouton raccrocher">
+        <span (click)="HangUp()" class="icon red"></span>
+      </div>
+      <div class="bouton decrocher">
+        <span (click)="PickUp()"  class="icon green"></span>
+      </div>
+    </div>
+    </div>
+</div>
+

@@ -6,6 +6,7 @@ import { Like } from '../models/like';
 import { Product } from '../models/product';
 import { Comment } from '../models/comment';
 import { Cart } from '../models/cart';
+import { Order } from '../models/order';
 
 @Injectable({
   providedIn: 'root'
@@ -68,5 +69,13 @@ export class ProductService {
 
   removeFromCart(cartItemId : bigint): Observable<any>{
     return this.http.post<any>(`${this.baseUrl}/product/remove-from-cart`,cartItemId)
+  }
+
+  addOrder(orderProductIds : bigint[]){
+    return this.http.post(`${this.baseUrl}/product/order`,orderProductIds)
+  }
+
+  getOrders() : Observable<Order[]>{
+    return this.http.get<Order[]>(`${this.baseUrl}/product/get-orders`)
   }
 }

@@ -1,0 +1,305 @@
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+
+<!-- char-area -->
+<section class="message-area">
+    <div class="        ">
+        <div class="row">
+            <div class="col-12">
+                <div class="chat-area">
+                    <!-- chatlist -->
+                    <div class="chatlist">
+                        <div class="modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="chat-header">
+                                    <div class="msg-search">
+                                        <input type="text" class="form-control" id="inlineFormInputGroup"
+                                            placeholder="Search" aria-label="search">
+                                        <a class="add" href="#"><img class="img-fluid"
+                                                src="https://mehedihtml.com/chatbox/assets/img/add.svg" alt="add"></a>
+                                    </div>
+
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="Open-tab" data-bs-toggle="tab"
+                                                data-bs-target="#Open" type="button" role="tab" aria-controls="Open"
+                                                aria-selected="true">{{currentUser.firstName}}'s Contacts</button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                                <div class="modal-body">
+                                    <!-- chat-list -->
+                                    <div class="chat-lists">
+                                        <div class="tab-content" id="myTabContent">
+                                            <div class="tab-pane fade show active" id="Open" role="tabpanel"
+                                                aria-labelledby="Open-tab">
+                                                <!-- chat-list -->
+                                                <div class="chat-list">
+                                                    <a *ngFor="let user of users" (click)="userSelected(user)"
+                                                        class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0">
+                                                            <img class="img-fluid"
+                                                                src="https://mehedihtml.com/chatbox/assets/img/user.png"
+                                                                alt="user img">
+                                                            <span *ngIf="activeUserIds.includes(user.id)"
+                                                                class="active"></span>
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-3" [attr.id]="user.id">
+                                                            <h3>{{user.firstName}} {{user.lastName}}</h3>
+                                                            <span style="color: gray;">Front End Developer </span>
+                                                        </div>
+                                                    </a>
+                                                    <!-- <a href="#" class="d-flex align-items-center">
+                                                            <div class="flex-shrink-0">
+                                                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png" alt="user img">
+                                                            </div>
+                                                            <div class="flex-grow-1 ms-3">
+                                                                <h3>Ryhan</h3>
+                                                                <p>front end developer</p>
+                                                            </div>
+                                                        </a> -->
+                                                </div>
+                                                <!-- chat-list -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- chat-list -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- chatlist -->
+
+
+
+                    <!-- chatbox -->
+                    <div class="chatbox">
+                        <div id="dialogBox" *ngIf="audioModel">
+                            <link href='https://fonts.googleapis.com/css?family=Hind:300|Open+Sans+Condensed:300'
+                                rel='stylesheet' type='text/css'>
+
+                            <div class="card">
+                                <div class="header" id="blueBox">
+                                    <div class="animation">
+                                        <span class="icon ring" #iconBox></span>
+                                        <div class="cercle one"></div>
+                                        <div class="cercle two"></div>
+                                        <div class="cercle three"></div>
+                                    </div>
+
+                                    <p class="phoneNumber">182 5843 6068</p>
+                                    <p class="calling">Calling</p>
+                                </div>
+                                <audio id="localAudio" #localAudio style="visibility: hidden;"></audio>
+                                <audio id="remoteAudio" #remoteAudio style="visibility: hidden;"></audio>
+
+                                <div class="footer">
+                                    <div class="bouton raccrocher">
+                                        <span (click)="HangUp(false)" class="icon red"></span>
+                                    </div>
+                                    <div *ngIf="isGreenBtn" class="bouton decrocher">
+                                        <span (click)="PickUp()" class="icon green"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="dialogBox" *ngIf="videoModel">
+                            <link href='https://fonts.googleapis.com/css?family=Hind:300|Open+Sans+Condensed:300'
+                                rel='stylesheet' type='text/css'>
+                            <div class="card">
+                                <!-- <div class="header" id="blueBox">
+                                    <div class="animation">
+                                        <span class="icon ring" #iconBox></span>
+                                    </div>
+                                 </div> -->
+                                <div class="header" id="blueBox">
+                                        <video width="100%" height="100%" id="remoteVideo"  autoplay playsinline src="" #remoteVideo></video>
+                                        <video width="100%" height="100%" id="localVideo"  autoplay playsinline src="" #localVideo ></video>
+                                </div>
+                                <div class="footer">
+                                    <div class="bouton raccrocher">
+                                        <span (click)="HangUp(true)" class="icon red"></span>
+                                    </div>
+                                    <div *ngIf="isGreenBtn" class="bouton decrocher">
+                                        <span (click)="PickUp()" class="icon green"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="msg-head">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="d-flex align-items-center">
+                                                <span class="chat-icon"><img class="img-fluid"
+                                                        src="https://mehedihtml.com/chatbox/assets/img/arroleftt.svg"
+                                                        alt="image title"></span>
+                                                <div class="flex-shrink-0">
+                                                    <img class="img-fluid"
+                                                        src="https://mehedihtml.com/chatbox/assets/img/user.png"
+                                                        alt="user img">
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h3>{{this.selectedUserName}}</h3>
+                                                    <p>front end developer</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <ul class="moreoption">
+                                                <li class="navbar nav-item dropdown">
+                                                    <button mat-fab color="primary" (click)="openModel(false)"
+                                                        style="box-shadow: none; margin-right: 3px;" extended>
+                                                        <mat-icon>call</mat-icon>
+                                                        Call
+                                                    </button>
+                                                </li>
+                                                <li class="navbar nav-item dropdown">
+                                                    <button mat-fab color="primary" (click)="openModel(true)"
+                                                        style="box-shadow: none;" extended>
+                                                        <mat-icon>monitor</mat-icon>
+                                                        Share
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="modal-body">
+                                    <div class="msg-body" #chat>
+                                        <ul id="chatting">
+                                            <ng-container *ngFor="let message of messages">
+                                                <li *ngIf="message.fileUrl != null" [attr.class]="message.type"
+                                                    [ngStyle]="message.type === 'repaly' ? 
+                                                    {'display': 'flex', 'flex-direction': 'column', 'align-items': 'end'} : {}">
+                                                    <mat-card class="example-card" appearance="outlined"
+                                                        style="overflow: hidden;">
+                                                        <mat-card-header>
+                                                            <mat-card-title>{{message.fileName}}</mat-card-title>
+                                                        </mat-card-header>
+                                                        <hr>
+                                                        <img mat-card-image [src]="message.fileUrl"
+                                                            alt="Document Image">
+                                                        <hr>
+                                                        <mat-card-actions>
+                                                            <a [href]="message.fileUrl" target="_blank"
+                                                                style="text-align: center; margin: auto;" download>
+                                                                <button mat-button
+                                                                    style="background-color: #3867d6; color: white;">Downlode</button>
+                                                            </a>
+                                                        </mat-card-actions>
+                                                    </mat-card>
+                                                    <span class="time">{{message.time}}</span>
+                                                </li>
+                                                <li [attr.class]="message.type">
+                                                    <p>{{message.text}}</p>
+                                                    <span class="time">{{message.time}}</span>
+                                                </li>
+                                            </ng-container>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                                <div class="send-box">
+                                    <div *ngIf="this.file != null">
+                                        <mat-card class="example-card" appearance="outlined"
+                                            style="align-items: center;">
+                                            <mat-card-header style="display: flex; justify-content: center;">
+                                                <img mat-card-md-image
+                                                    *ngIf="filePreview && file.type.startsWith('image/')" width="200"
+                                                    [src]="this.filePreview" alt="Image of a Shiba Inu">
+                                                <video *ngIf="filePreview && file.type.startsWith('video/')" width="200"
+                                                    controls>
+                                                    <source [src]="filePreview" [type]="file.type">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                                <img mat-card-md-image
+                                                    *ngIf="filePreview && file.type === 'application/pdf'"
+                                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/625px-PDF_file_icon.svg.png"
+                                                    width="200" style="object-fit: contain;">
+                                                <a *ngIf="filePreview && (file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')"
+                                                    [href]="filePreview" target="_blank">View Document</a>
+                                            </mat-card-header>
+                                            <mat-card-content style="text-align: center; margin-top: 5px;">
+                                                {{this.file.name }}
+                                            </mat-card-content>
+                                            <button mat-button (click)="removeImage()" style="margin-bottom: 5px;">
+                                                <mat-icon>delete</mat-icon>
+                                            </button>
+                                        </mat-card>
+                                    </div>
+
+                                    <form action="">
+                                        <input type="text" class="form-control" [(ngModel)]="message" name="message"
+                                            aria-label="message…" placeholder="Write message…">
+
+                                        <button [disabled]='this.message == null || this.message == ""' (click)="send()"
+                                            type="button"><i class="ri-send-plane-line"></i> Send</button>
+                                    </form>
+
+                                    <div class="send-btns">
+                                        <div class="attach">
+                                            <div class="button-wrapper">
+                                                <span class="label">
+                                                    <img class="img-fluid"
+                                                        src="https://mehedihtml.com/chatbox/assets/img/upload.svg"
+                                                        alt="image title"> attached file
+                                                </span><input type="file" (input)="selectFile($event)" name="upload"
+                                                    id="upload" class="upload-box" placeholder="Upload File"
+                                                    aria-label="Upload File">
+                                            </div>
+
+                                            <select class="form-control" id="exampleFormControlSelect1">
+                                                <option>Select template</option>
+                                                <option>Template 1</option>
+                                                <option>Template 2</option>
+                                            </select>
+
+                                            <div class="add-apoint">
+                                                <a href="#" data-toggle="modal" data-target="#exampleModal4"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        viewbox="0 0 16 16" fill="none">
+                                                        <path
+                                                            d="M8 16C3.58862 16 0 12.4114 0 8C0 3.58862 3.58862 0 8 0C12.4114 0 16 3.58862 16 8C16 12.4114 12.4114 16 8 16ZM8 1C4.14001 1 1 4.14001 1 8C1 11.86 4.14001 15 8 15C11.86 15 15 11.86 15 8C15 4.14001 11.86 1 8 1Z"
+                                                            fill="#7D7D7D" />
+                                                        <path
+                                                            d="M11.5 8.5H4.5C4.224 8.5 4 8.276 4 8C4 7.724 4.224 7.5 4.5 7.5H11.5C11.776 7.5 12 7.724 12 8C12 8.276 11.776 8.5 11.5 8.5Z"
+                                                            fill="#7D7D7D" />
+                                                        <path
+                                                            d="M8 12C7.724 12 7.5 11.776 7.5 11.5V4.5C7.5 4.224 7.724 4 8 4C8.276 4 8.5 4.224 8.5 4.5V11.5C8.5 11.776 8.276 12 8 12Z"
+                                                            fill="#7D7D7D" />
+                                                    </svg> Appoinment</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- chatbox -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- char-area -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

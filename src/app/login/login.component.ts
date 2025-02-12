@@ -5,6 +5,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { LoginService } from '../services/login.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
 
 
 
-  constructor(private logInSignUpService: LoginService, private router: Router) {
+  constructor(private logInSignUpService: LoginService, private router: Router, private authService : AuthService) {
     this.signUpForm = new FormGroup({
       id : new FormControl(0),
       firstName: new FormControl('', Validators.required),
@@ -61,6 +62,7 @@ export class LoginComponent implements OnInit {
     localStorage.setItem("token",this.tokenObject.token)
     if (isValid) {
       // Navigate to home page
+      this.authService.authStatus.next(true)
       this.router.navigate(['home']);
     } else {
       // Handle invalid sign-in
