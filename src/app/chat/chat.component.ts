@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   MatDialog
@@ -41,7 +41,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   videoModel : boolean = false;
   isCallPick : boolean = false;
   isGreenBtn : boolean = false;
-  // private callPickResolver!: (value: boolean) => void;
+  private callPickResolver!: (value: boolean) => void;
 
   readonly dialog = inject(MatDialog);
   iceServersConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
@@ -49,15 +49,15 @@ export class ChatComponent implements OnInit, AfterViewInit {
   peerConnection : RTCPeerConnection | null = null;
 
   @ViewChild('iconBox') iconElement! : ElementRef; 
-  @ViewChild('localAudio') localAudio! : ElementRef;
-  @ViewChild('remoteAudio') remoteAudio! : ElementRef<HTMLVideoElement>;
-  @ViewChild('localVideo') localVideo! : ElementRef<HTMLVideoElement>;
-  @ViewChild('remoteVideo') remoteVideo! : ElementRef;
-  @ViewChild('chat') chatContainer! : ElementRef
+  @ViewChild('localAudio') localAudio! : ElementRef<HTMLAudioElement>;
+  @ViewChild('remoteAudio') remoteAudio! : ElementRef<HTMLAudioElement>;
+  @ViewChild('localVideo', { static: false }) localVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('remoteVideo', { static: false }) remoteVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('chat') chatContainer! : ElementRef;
   
 
 
-  constructor(private loginService : LoginService, private authService : AuthService, private chatService : ChatService){
+  constructor(private loginService : LoginService, private authService : AuthService, private chatService : ChatService, private cdr: ChangeDetectorRef){
     this.token = localStorage.getItem("token") ?? "";
 
     this.currentUser = authService.userClaims();
@@ -93,15 +93,14 @@ export class ChatComponent implements OnInit, AfterViewInit {
       .withUrl('http://192.168.0.221:5269/api/chatHub',{
         accessTokenFactory: () => localStorage.getItem("token") || ""  // ✅ Send JWT token 
       })
-      
       .withAutomaticReconnect() // ✅ Ensures it reconnects after disconnect
       .build();
 
     this.connection.start()
-      .then(() => {
-        console.log("SignalR Connected!");
-        this.setupSignalRListeners(); // ✅ Attach event listeners after connection starts
-        this.connection.invoke("SendActiveUserIds");
+      .then(async () => {  // ✅ Make it async
+          console.log("SignalR Connected!");
+          await this.setupSignalRListeners();  // ✅ Await it since it contains async code
+          await this.connection.invoke("SendActiveUserIds");  // ✅ Ensure it runs after listeners are set
       })
       .catch(err => console.error("SignalR Connection Error: ", err));
 
@@ -111,6 +110,86 @@ export class ChatComponent implements OnInit, AfterViewInit {
       this.setupSignalRListeners(); // ✅ Reattach listeners after reconnection
     });
   }
+
+
+  async setupSignalRListeners() {
+    this.connection.on('ReceiveMessage', async (messageObj: Message, senderUserId: any) => {
+        console.log(`Message received: ${messageObj.text}`);
+        if (senderUserId === this.selectedUserId) {
+            this.messages.push(messageObj);
+            this.scrollToBottom();
+        } else {
+            this.senderUserCard = document.getElementById(senderUserId) as HTMLDivElement;
+            if (this.senderUserCard) {
+                this.senderUserCard.innerHTML += `
+                    <span>
+                        <i class="ri-mail-unread-line" style="color:rgb(144, 235, 9); font-size: large;"></i>
+                    </span>
+                `;
+            }
+        }
+    });
+
+    this.connection.on("ReceiveActiveUserIds", (activeUserIds: bigint[]) => {
+        console.log(activeUserIds);
+        this.activeUserIds = activeUserIds;
+    });
+
+    this.connection.on("ReceiveSignal", async (fromUserId: string, signal: string, isVideoChat: boolean) => {
+        console.log("Signal received from:", fromUserId);
+        const signalData = JSON.parse(signal);
+
+        if (signalData?.sdp?.type === "offer") {
+            this.videoModel = true;
+            this.cdr.detectChanges();
+            console.log("ViewChild elements initialized. Reciever side",this.remoteVideo,this.localVideo);
+        }
+
+        if (signalData.sdp) {
+            if (this.peerConnection == null) await this.setupPeerConnection(true); // ✅ Await to ensure setup is complete
+
+            await this.peerConnection?.setRemoteDescription(new RTCSessionDescription(signalData.sdp));
+
+            if (signalData.sdp.type === "offer") {
+                console.log("Received offer, sending answer...");
+                isVideoChat ? (this.videoModel = true) : (this.audioModel = true);
+                this.isGreenBtn = true;
+
+                const userResponse = await this.callPickPromise(); // Waits for user action
+
+                if (!userResponse) {
+                    console.log("Call declined.");
+                    this.endVideoChat();
+                    return;
+                }
+
+                await (isVideoChat ? this.startLocalVideoStream() : this.startLocalStream());
+
+                this.localStream.getTracks().forEach((track) => {
+                    this.peerConnection?.addTrack(track, this.localStream);
+                });
+
+                const answer = await this.peerConnection?.createAnswer();
+                await this.peerConnection?.setLocalDescription(answer);
+
+                console.log("Sending answer to:", fromUserId);
+                await this.connection.invoke("SendSignal", fromUserId, JSON.stringify({ sdp: answer }), true);
+                this.isGreenBtn = true;
+            }
+        } else if (signalData.ice) {
+            if (this.peerConnection) {
+                await this.peerConnection.addIceCandidate(new RTCIceCandidate(signalData.ice));
+                console.log("Added ICE candidate.");
+            }
+        }
+    });
+}
+
+ callPickPromise(): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
+    this.callPickResolver = resolve; // Store the resolve function
+  });
+}
 
   userSelected(user : SignUpFormData){
 
@@ -194,76 +273,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  setupSignalRListeners() {
-    this.connection.on('ReceiveMessage', async (messageObj: Message, senderUserId: any) => {
-      console.log(`Message received: ${messageObj.text}`);
-      debugger;
-      if (senderUserId === this.selectedUserId) {
-        this.messages.push(messageObj);
-        this.scrollToBottom();
-      } else {
-        this.senderUserCard = document.getElementById(senderUserId) as HTMLDivElement;
-        if (this.senderUserCard) {
-          this.senderUserCard.innerHTML += `
-            <span>
-              <i class="ri-mail-unread-line" style="color:rgb(144, 235, 9); font-size: large;"></i>
-            </span>
-          `;
-        }
-      }
-    });
-  
-    this.connection.on("ReceiveActiveUserIds", (activeUserIds: bigint[]) => {
-      console.log(activeUserIds);
-      this.activeUserIds = activeUserIds;
-    });
-    
-    this.connection.on("ReceiveSignal", async (fromUserId: string, signal: string, isVideoChat: boolean) => {
-      debugger;
-      console.log("Signal received from:", fromUserId);
-      const signalData = JSON.parse(signal);
-      if (signalData?.sdp?.type === "offer") {
-        this.videoModel = true;}
-        
-      if (signalData.sdp) {
-        debugger;
-        if(this.peerConnection == null) this.setupPeerConnection(true);
-
-        await this.peerConnection?.setRemoteDescription(new RTCSessionDescription(signalData.sdp));
-  
-        if (signalData.sdp.type === "offer") {
-          console.log("Received offer, sending answer...");
-          isVideoChat ? (this.videoModel = true) : (this.audioModel = true);
-          this.isGreenBtn = true;
-  
-          const userResponse = confirm("Do you want to accept the call?");
-          if (!userResponse) {
-            console.log("Call declined.");
-            this.endVideoChat();
-            return;
-          }
-  
-          await (isVideoChat ? this.startLocalVideoStream() : this.startLocalStream());
-  
-          this.localStream.getTracks().forEach((track) => {
-            this.peerConnection?.addTrack(track, this.localStream);
-          });
-  
-          const answer = await this.peerConnection?.createAnswer();
-          await this.peerConnection?.setLocalDescription(answer);
-  
-          console.log("Sending answer to:", fromUserId);
-          this.connection.invoke("SendSignal", fromUserId, JSON.stringify({ sdp: answer }), true);
-          this.isGreenBtn = true;
-        }
-      } else if (signalData.ice) {
-        if (this.peerConnection) {
-          await this.peerConnection.addIceCandidate(new RTCIceCandidate(signalData.ice));
-          console.log("Added ICE candidate.");
-        }
-      }
-    });
-  }
 
   formatTime(date : any) {
     let hours = date.getHours();
@@ -321,6 +330,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
     
     if(isVideoChat){
       this.endVideoChat();
+      this.callPickResolver(false);
       this.connection.invoke("OnCutCall",this.selectedUserId,true)
       this.videoModel = false;
     }
@@ -341,6 +351,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
     this.isCallPick = true;
     this.isGreenBtn = false;
     debugger;
+    this.callPickResolver(true);
     // if (this.callPickResolver) {
     //   debugger;
     //   this.callPickResolver(true); // Resolve with "true" when the green button is clicked
@@ -359,16 +370,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async startLocalVideoStream() : Promise<void> {
-    debugger;
-    try {
-        this.localStream = await navigator.mediaDevices.getDisplayMedia({ audio: true , video: true});
-        this.localVideo.nativeElement.srcObject = this.localStream;
-        console.log("Local stream started.");
-    } catch (error) {
-        console.error("Error starting local stream:", error);
-    }
-  }
+
 
 //   setupPeerConnection(isVideoChat: boolean) {  
 //     debugger;
@@ -402,29 +404,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
 //     console.log("Peer connection initialized.");
 // }
 
- setupPeerConnection(isVideoChat : boolean) {  // ice exchange A -> B and B -> A  and set remote source to peer event stream
-  this.peerConnection = new RTCPeerConnection(this.iceServersConfig);
-debugger;
-  this.peerConnection.onicecandidate = ({ candidate }) => {
-      if (candidate) {
-          console.log("Sending ICE candidate to:", this.selectedUserId);
-          this.connection.invoke("SendSignal", this.selectedUserId, JSON.stringify({ ice: candidate }),isVideoChat);
-      }
-  };
 
-  this.peerConnection.ontrack = (event) => {
-      console.log("Remote track received.");
-      debugger;
-      this.remoteVideo.nativeElement.srcObject = event.streams[0];
-  };
-
-  console.log("Peer connection initialized.");
-}
-
-
-async audioVideoEventListener() {
-
-}
 
   async startAudioChat() {
     try {
@@ -448,30 +428,77 @@ async audioVideoEventListener() {
     }
   }
 
-  async startVideoChat() {
+  async startLocalVideoStream(): Promise<void> {
+    try {
+        this.localStream = await navigator.mediaDevices.getDisplayMedia({ audio: true, video: true });
+
+        if (!this.localStream) {
+            throw new Error("Failed to get local media stream.");
+        }
+
+        this.localVideo.nativeElement.srcObject = this.localStream;
+        console.log("Local stream started.");
+    } catch (error) {
+        console.error("Error starting local stream:", error);
+    }
+}
+
+async setupPeerConnection(isVideoChat: boolean): Promise<void> {
+    this.peerConnection = new RTCPeerConnection(this.iceServersConfig);
+
+    this.peerConnection.onicecandidate = async ({ candidate }) => {
+        if (candidate) {
+            console.log("Sending ICE candidate to:", this.selectedUserId);
+            await this.connection.invoke("SendSignal", this.selectedUserId, JSON.stringify({ ice: candidate }), isVideoChat);
+        }
+    };
+
+    this.peerConnection.ontrack = (event) => {
+        console.log("Remote track received.");
+        if (event.streams.length > 0) {
+            this.remoteVideo.nativeElement.srcObject = event.streams[0];
+        }
+    };
+
+    console.log("Peer connection initialized.");
+}
+
+async startVideoChat(): Promise<void> {
     try {
         this.isCallPick = false;
         this.isGreenBtn = false;
-        await this.startLocalVideoStream(); // set local src
-        this.setupPeerConnection(true); // exchange ice  and set remote src
+
+        await this.startLocalVideoStream(); // Set local video stream
+        await this.setupPeerConnection(true); // Initialize peer connection
+
+        if (!this.peerConnection || !this.localStream) {
+            console.error("Peer connection or local stream is not initialized.");
+            return;
+        }
+
         // Add Local Tracks
-        this.localStream.getTracks().forEach((track) => this.peerConnection?.addTrack(track, this.localStream));
+        this.localStream.getTracks().forEach(track => {
+            this.peerConnection!.addTrack(track, this.localStream);
+        });
 
         // Create and Send Offer
-        const offer = await this.peerConnection?.createOffer();
-        await this.peerConnection?.setLocalDescription(offer);
-
+        const offer = await this.peerConnection.createOffer();
+        await this.peerConnection.setLocalDescription(offer);
+        
         console.log("Sending offer to:", this.selectedUserId);
-        this.connection.invoke("SendSignal", this.selectedUserId, JSON.stringify({ sdp: offer }),true);
-
+        await this.connection.invoke("SendSignal", this.selectedUserId, JSON.stringify({ sdp: offer }), true);
+        
     } catch (error) {
         console.error("Error starting video chat:", error);
     }
-  }
+}
+
 
   openModel(isVideoChat : boolean) : void {
     if(isVideoChat){
       this.videoModel = true;
+      this.cdr.detectChanges();
+      console.log("ViewChild elements initialized.",this.remoteVideo,this.localVideo);
       this.startVideoChat();
     }
     else{
@@ -479,14 +506,6 @@ async audioVideoEventListener() {
       this.startAudioChat();
     }
   }
-
-
-
-  // async isCallPickUp(): Promise<boolean> {
-  //   return new Promise<boolean>((resolve) => {
-  //     this.callPickResolver = resolve; // Store resolver to call later when the user clicks the button
-  //   });
-  // }
 
   endAudieoChat() {
     if (this.localStream) {
